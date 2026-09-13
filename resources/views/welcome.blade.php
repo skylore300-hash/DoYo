@@ -1,4 +1,4 @@
-<x-layouts.app title="Sierra.shop | Trouvez votre style">
+<x-layouts.app title="DoYo.shop | Trouvez votre style">
     <div class="storefront">
         <x-store.header />
 
