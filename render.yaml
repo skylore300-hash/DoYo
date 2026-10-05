@@ -17,6 +17,10 @@ services:
         value: https://doyo-1.onrender.com
       - key: APP_KEY
         generateValue: true
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: /var/www/html/database/database.sqlite
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER

@@ -80,4 +80,4 @@ RUN composer dump-autoload --no-dev --optimize \
 # =========================
 EXPOSE 10000
 
-CMD ["sh", "-c", "PORT=${PORT:-10000}; sed -ri \"s/Listen [0-9]+/Listen ${PORT}/\" /etc/apache2/ports.conf; sed -ri \"s/\\*:[0-9]+/*:${PORT}/\" /etc/apache2/sites-available/000-default.conf; apache2-foreground"]
+CMD ["sh", "-c", "set -e; touch database/database.sqlite; php artisan migrate --force; PORT=${PORT:-10000}; sed -ri \"s/Listen [0-9]+/Listen ${PORT}/\" /etc/apache2/ports.conf; sed -ri \"s/\\*:[0-9]+/*:${PORT}/\" /etc/apache2/sites-available/000-default.conf; exec apache2-foreground"]
