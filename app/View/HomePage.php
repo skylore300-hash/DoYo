@@ -2,13 +2,33 @@
 
 namespace App\View;
 
+use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
+
 final class HomePage
 {
     public static function data(): array
     {
+        $publishedProducts = Product::query()
+            ->with('seller')
+            ->where('published', true)
+            ->latest()
+            ->get()
+            ->map(static fn (Product $product): array => [
+                'name' => $product->name,
+                'description' => $product->description,
+                'image' => Storage::disk('public')->url($product->image_path),
+                'seller' => $product->seller->name,
+                'city' => $product->seller->city,
+                'price' => '$'.number_format((float) $product->price, 0),
+                'rating' => 'Nouveau',
+                'reviews' => '0',
+            ])
+            ->all();
+
         return [
             'brands' => ['VERSACE', 'ZARA', 'GUCCI', 'PRADA', 'Calvin Klein'],
-            'newProducts' => [
+            'newProducts' => array_merge($publishedProducts, [
                 [
                     'name' => 'T-shirt avec bandes',
                     'image' => 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85',
@@ -29,7 +49,7 @@ final class HomePage
                     'image' => 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=700&q=85',
                     'price' => '$130', 'oldPrice' => '$160', 'discount' => '-30%', 'rating' => '4.5/5', 'reviews' => '117',
                 ],
-            ],
+            ]),
             'bestSellers' => [
                 [
                     'name' => 'Chemise à rayures verticales',

@@ -18,7 +18,7 @@
                 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h2l1.5 10h10L20 8H7"></path><circle cx="9" cy="19" r="1"></circle><circle cx="17" cy="19" r="1"></circle></svg>
                 <span class="cart-count" data-cart-count>0</span>
             </button>
-            <button type="button" class="icon-button account-button" aria-label="Mon compte"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5.5 20c.8-3.2 3-5 6.5-5s5.7 1.8 6.5 5"></path></svg></button>
+            <a href="{{ auth()->check() ? route('seller.dashboard') : route('seller.login') }}" class="icon-button account-button" aria-label="Espace vendeur"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5.5 20c.8-3.2 3-5 6.5-5s5.7 1.8 6.5 5"></path></svg></a>
             <button type="button" class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" data-menu-toggle><span></span><span></span></button>
         </div>
     </div>
