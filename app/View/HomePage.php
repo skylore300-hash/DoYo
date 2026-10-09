@@ -15,12 +15,15 @@ final class HomePage
             ->latest()
             ->get()
             ->map(static fn (Product $product): array => [
+                'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
                 'image' => Storage::disk('public')->url($product->image_path),
                 'seller' => $product->seller->name,
                 'city' => $product->seller->city,
-                'price' => '$'.number_format((float) $product->price, 0),
+                'price' => '$'.number_format((float) $product->price * (1 - ($product->discount_percent / 100)), 0),
+                'originalPrice' => '$'.number_format((float) $product->price, 0),
+                'discountPercent' => $product->discount_percent,
                 'rating' => 'Nouveau',
                 'reviews' => '0',
             ])

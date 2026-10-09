@@ -15,6 +15,7 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'discount_percent',
         'stock',
         'image_path',
         'published',
@@ -24,6 +25,7 @@ class Product extends Model
     {
         return [
             'price' => 'decimal:2',
+            'discount_percent' => 'integer',
             'published' => 'boolean',
         ];
     }

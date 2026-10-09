@@ -199,13 +199,43 @@ document.querySelectorAll('.size-options button, .color-dot').forEach((option) =
 	});
 });
 
-checkoutButton?.addEventListener('click', () => {
+checkoutButton?.addEventListener('click', async () => {
 	const entries = Object.values(cart);
 	if (entries.length === 0) return;
 	const total = entries.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 	const lines = entries.map((item) => `- ${item.name} x${item.quantity}: ${formatPrice(item.price * item.quantity)}`);
 	const message = ['Bonjour DoYo.shop, je souhaite commander :', '', ...lines, '', `Total : ${formatPrice(total)}`, '', 'Merci de me confirmer la disponibilité et la livraison.'].join('\n');
 	const phone = cartDrawer?.dataset.whatsappNumber ?? '';
+
+	const orderItems = entries
+		.filter((item) => /^\d+$/.test(String(item.id)))
+		.map((item) => ({ product_id: Number(item.id), quantity: item.quantity }));
+
+	if (orderItems.length > 0) {
+		checkoutButton.disabled = true;
+		try {
+			const response = await fetch('/commandes', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+				},
+				body: JSON.stringify({ items: orderItems }),
+			});
+
+			if (!response.ok) {
+				throw new Error('La demande de commande n’a pas pu être enregistrée.');
+			}
+		} catch (error) {
+			console.error('Impossible d’enregistrer la demande de commande.', error);
+			window.alert('La commande n’a pas pu être enregistrée. Veuillez réessayer.');
+			return;
+		} finally {
+			checkoutButton.disabled = false;
+		}
+	}
+
 	window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
 });
 
